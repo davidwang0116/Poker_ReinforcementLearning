@@ -1,0 +1,16 @@
+# Core RL framework
+open_spiel==1.5
+
+# Numerics
+numpy>=1.24,<2.0
+
+# Deep learning (needed by Person 2 for DQN / PPO)
+torch>=2.0
+
+# Plotting / analysis (Person 3)
+matplotlib>=3.7
+pandas>=2.0
+scipy>=1.11
+
+# Misc
+tqdm>=4.65
