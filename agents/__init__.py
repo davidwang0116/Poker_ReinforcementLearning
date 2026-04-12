@@ -13,5 +13,6 @@ Learning agents additionally implement:
 
 from agents.base_agent import BaseAgent
 from agents.random_agent import RandomAgent
+from agents.cfr_agent import CFRAgent
 
-__all__ = ["BaseAgent", "RandomAgent"]
+__all__ = ["BaseAgent", "RandomAgent", "CFRAgent"]

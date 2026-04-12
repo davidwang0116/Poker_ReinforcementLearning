@@ -1,0 +1,17 @@
+# CFR (Counterfactual Regret Minimization) Configuration
+# Computes Nash equilibrium for Leduc Hold'em poker
+
+game_name: "leduc_poker"
+algo: "cfr"
+seed: 42
+
+# CFR parameters
+cfr:
+  num_iterations: 10000  # Number of CFR iterations (more = closer to Nash)
+  
+training:
+  save_path: "models/cfr/leduc_cfr.pkl"
+  
+# Note: CFR doesn't use episodes or neural networks.
+# It directly computes the Nash equilibrium by iterating
+# over the full game tree.

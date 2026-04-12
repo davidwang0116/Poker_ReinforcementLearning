@@ -1,0 +1,117 @@
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+.venv_linux/
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Model weights and training artifacts
+models/
+*.pth
+*.pkl
+*.h5
+*.hdf5
+*.ckpt
+*.pb
+
+# Training logs and results
+logs/
+results/
+runs/
+tensorboard/
+wandb/
+
+# Data files (if large)
+data/
+*.csv
+*.npy
+*.npz
+
+# Temporary files
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDEs and editors
+*.sublime-project
+*.sublime-workspace
+.project
+.pydevproject
+.settings/
+
+# Agent transcripts (Cursor specific)
+agent-transcripts/
+
+# Agent tools output (Cursor specific)
+agent-tools/
+
+# OpenSpiel build artifacts (if building from source)
+open_spiel/build/
+open_spiel/dist/
