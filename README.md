@@ -159,11 +159,11 @@ Result: Player 1 wins the pot (10 chips) even though they had the
 
 ## Team Roles
 
-| Person | Scope | Key Files |
-|--------|-------|-----------|
-| **1 (You)** | Environment + baseline | `poker_env.py`, `agents/random_agent.py`, `evaluate.py`, `config.py` |
-| **2** | Algorithm 1 + 2 | `agents/dqn_agent.py`, `agents/ppo_agent.py` |
-| **3** | Algorithm 3 + analysis | `agents/cfr_agent.py` (or NFSP), `plotting.py`, `stats.py`, report |
+| Person | Scope | Key Files | Status |
+|--------|-------|-----------|--------|
+| **1 (You)** | Environment + baseline | `poker_env.py`, `agents/random_agent.py`, `evaluate.py`, `config.py` | ✓ Complete |
+| **2** | Algorithm 1 + 2 | `agents/dqn_agent.py`, `agents/ppo_agent.py` | ✓ Complete |
+| **3** | Algorithm 3 + analysis | `agents/cfr_agent.py`, `train_cfr.py`, `CFR_README.md` | ✓ Complete |
 
 Everyone should understand the full pipeline end-to-end.
 
@@ -199,8 +199,14 @@ python run_evaluation.py
 # PPO 模型 vs 随机对手 (1000局)
 python run_evaluation.py --mode head_to_head --agents ppo random --episodes 1000
 
-# 算法全家桶循环赛 (Random, DQN, PPO)
-python run_evaluation.py --mode round_robin --agents random dqn ppo
+# 算法全家桶循环赛 (Random, DQN, PPO, CFR)
+python run_evaluation.py --mode round_robin --agents random dqn ppo cfr
+
+# CFR 专用：训练 CFR 智能体
+python train_cfr.py --iterations 10000
+
+# CFR 专用：检查 Nash 距离（可利用性）
+python run_evaluation.py --mode exploitability --agents cfr
 ```
 
 ---
