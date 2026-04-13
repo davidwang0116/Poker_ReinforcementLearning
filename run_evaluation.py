@@ -101,17 +101,29 @@ def make_agent(name: str, player_id: int, env: PokerEnv, **kwargs):
             print(f"Warning: No PPO model at {load_path}")
         return agent
 
+    # ── Person 3: CFR ──
+    elif name == "cfr":
+        from agents.cfr_agent import CFRAgent
+        from config import CFRConfig
+        
+        agent = CFRAgent(
+            player_id=player_id,
+            num_actions=env.num_actions,
+            game=env.get_game(),
+            config=CFRConfig()
+        )
+        
+        load_path = kwargs.get("load_path", "models/cfr/cfr_agent.pkl")
+        if os.path.exists(load_path):
+            print(f"Loading CFR model from {load_path}...")
+            agent.load(load_path)
+        else:
+            print(f"Warning: No CFR model at {load_path}, using untrained agent.")
+        
+        return agent
+    
     else:
         raise ValueError(f"Unknown agent: {name!r}")
-
-    # ── Person 3: CFR / NFSP ──
-    # elif name == "cfr":
-    #     from agents.cfr_agent import CFRAgent
-    #     agent = CFRAgent(player_id=player_id, num_actions=env.num_actions,
-    #                      game=env.get_game(), config=CFRConfig())
-    #     if kwargs.get("load_path"):
-    #         agent.load(kwargs["load_path"])
-    #     return agent
 
 
 # ── CLI ─────────────────────────────────────────────────
@@ -182,11 +194,58 @@ def main():
         print_round_robin(rr)
 
     elif args.mode == "exploitability":
-        # Only works for agents that expose a tabular policy
-        # (e.g., CFR).  Stub for Person 3.
-        print("Exploitability evaluation not yet implemented.")
-        print("Person 3: implement this after CFR agent is ready.")
-        sys.exit(0)
+        # Only works for agents that expose a tabular policy (e.g., CFR)
+        if len(args.agents) != 1:
+            print("ERROR: exploitability mode requires exactly 1 agent.",
+                  file=sys.stderr)
+            sys.exit(1)
+        
+        agent_name = args.agents[0]
+        if agent_name.lower() != "cfr":
+            print(f"ERROR: exploitability evaluation only supported for CFR agents.",
+                  file=sys.stderr)
+            print(f"       (Neural network agents like DQN/PPO don't have tabular policies)",
+                  file=sys.stderr)
+            sys.exit(1)
+        
+        # Load CFR agent
+        agent = make_agent(agent_name, player_id=0, env=env)
+        
+        if not hasattr(agent, 'get_exploitability'):
+            print(f"ERROR: Agent {agent_name} does not support exploitability evaluation.",
+                  file=sys.stderr)
+            sys.exit(1)
+        
+        print("="*60)
+        print("Exploitability Evaluation")
+        print("="*60)
+        print(f"Agent: {agent_name}")
+        print()
+        
+        try:
+            exploitability = agent.get_exploitability()
+            print(f"Exploitability: {exploitability:.6f}")
+            print()
+            print("Interpretation:")
+            print("  0.0     = Perfect Nash equilibrium")
+            print("  < 0.1   = Excellent (very close to Nash)")
+            print("  < 0.5   = Good")
+            print("  < 1.0   = Acceptable")
+            print("  >= 1.0  = Needs more training")
+            print()
+            
+            if exploitability < 0.1:
+                print("✓ Excellent! Agent is very close to Nash equilibrium.")
+            elif exploitability < 0.5:
+                print("✓ Good! Agent has converged well.")
+            elif exploitability < 1.0:
+                print("⚠ Acceptable, but could benefit from more training.")
+            else:
+                print("⚠ Agent needs more training to converge to Nash.")
+        
+        except Exception as e:
+            print(f"ERROR: Failed to compute exploitability: {e}", file=sys.stderr)
+            sys.exit(1)
 
 
 if __name__ == "__main__":

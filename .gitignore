@@ -1,0 +1,94 @@
+# Python virtual environment
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Results and outputs (optional - uncomment if you don't want to track)
+#results/
+
+# Trained models - Keep production models, exclude test/temporary ones
+models/**/test_*.pkl
+models/**/test_*.pth
+models/**/*_test_*.pkl
+models/**/*_test_*.pth
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.local
+
+# Editor backup files
+*~
+.*.swp
+.*.swo
+
+# Optional documentation (exclude from git)
+VISUALIZATION_GUIDE.md
+VISUALIZATION_README.md
+CFR_IMPLEMENTATION_SUMMARY.md

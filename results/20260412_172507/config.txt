@@ -1,0 +1,10 @@
+Evaluation Configuration
+==================================================
+
+Timestamp: 20260412_172507
+Agents: random, dqn, ppo, cfr
+Episodes per matchup: 1000
+Random seed: 42
+Environment: leduc_poker()
+Num actions: 3
+Observation size: 30
