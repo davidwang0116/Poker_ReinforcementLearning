@@ -62,7 +62,7 @@ def make_agent(name: str, player_id: int, env: PokerEnv, **kwargs):
         
         # 加载训练好的模型权重
         # 这里默认加载训练结束后的模型，或者你可以通过参数传入具体路径
-        load_path = kwargs.get("load_path", "models/dqn/dqn_selfplay_100w_final.pth")
+        load_path = kwargs.get("load_path", "models/dqn/dqn_selfplay_seed_42_lr_0.00003_10w.pth")
         if os.path.exists(load_path):
             print(f"Loading DQN model from {load_path}...")
             agent.load(load_path)

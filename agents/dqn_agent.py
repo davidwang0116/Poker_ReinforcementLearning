@@ -206,6 +206,7 @@ class DQNAgent(BaseAgent):
         loss = nn.MSELoss()(current_q, target_q)
         self.optimizer.zero_grad()
         loss.backward()
+
         self.optimizer.step()
 
         self.train_steps += 1

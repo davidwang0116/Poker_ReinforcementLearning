@@ -37,64 +37,53 @@ sns.set_palette("husl")
 # Training Curves
 # ══════════════════════════════════════════════════════════
 
-def plot_training_curves(
-    metrics: Dict[str, List[float]],
-    title: str = "Training Metrics",
-    save_path: Optional[str] = None,
-    show: bool = True,
-) -> Figure:
-    """Plot training curves for one or more metrics.
-    
-    Parameters
-    ----------
-    metrics : dict
-        Dictionary mapping metric names to lists of values.
-        Example: {'loss': [1.0, 0.8, 0.6], 'reward': [0.1, 0.3, 0.5]}
-    title : str
-        Plot title.
-    save_path : str, optional
-        Path to save the figure. If None, figure is not saved.
-    show : bool
-        Whether to display the plot.
-    
-    Returns
-    -------
-    Figure
-        The matplotlib figure object.
-    
-    Example
-    -------
-    >>> metrics = {
-    ...     'exploitability': [1.0, 0.5, 0.2, 0.1, 0.05],
-    ...     'win_rate': [0.3, 0.4, 0.45, 0.48, 0.5]
-    ... }
-    >>> plot_training_curves(metrics, title='CFR Training')
+def plot_training_curves(metrics, title="Training Progress", save_path=None, show=True, window=1000):
     """
-    n_metrics = len(metrics)
-    fig, axes = plt.subplots(n_metrics, 1, figsize=(10, 4 * n_metrics))
-    
-    if n_metrics == 1:
-        axes = [axes]
-    
-    for ax, (metric_name, values) in zip(axes, metrics.items()):
-        ax.plot(values, linewidth=2, marker='o', markersize=4)
-        ax.set_xlabel('Iteration / Episode', fontsize=12)
-        ax.set_ylabel(metric_name.replace('_', ' ').title(), fontsize=12)
-        ax.set_title(f'{metric_name.replace("_", " ").title()} over Training', fontsize=14)
+    绘制训练曲线，并对 Reward 进行平滑处理。
+    :param metrics: 包含 'loss', 'reward', 'epsilon' 等列表的字典
+    :param window: 滑动窗口大小，1000 代表计算最近 1000 局的平均值
+    """
+    num_metrics = len(metrics)
+    fig, axes = plt.subplots(num_metrics, 1, figsize=(10, 4 * num_metrics), sharex=True)
+    if num_metrics == 1: axes = [axes]
+
+    for ax, (name, values) in zip(axes, metrics.items()):
+        if name.lower() == 'reward':
+            # --- 关键修改：计算滑动平均 ---
+            # 使用 pandas 可以方便地处理滑动窗口
+            series = pd.Series(values)
+            smooth_values = series.rolling(window=window, min_periods=window//10).mean()
+            
+            # 绘制原始数据（浅色背景）
+            ax.plot(values, alpha=0.2, color='orange', label='Raw Reward')
+            # 绘制平滑曲线（深色主线）
+            ax.plot(smooth_values, color='red', linewidth=2, label=f'MA (window={window})')
+            ax.set_ylabel("Reward")
+            ax.legend()
+        
+        elif name.lower() == 'loss':
+            # Loss 通常也建议平滑，否则后期震荡太大会掩盖趋势
+            series = pd.Series(values)
+            smooth_loss = series.rolling(window=window//2, min_periods=10).mean()
+            ax.plot(values, alpha=0.3, color='blue')
+            ax.plot(smooth_loss, color='darkblue', linewidth=1.5)
+            ax.set_ylabel("Loss (Log Scale recommended)")
+            ax.set_yscale('log') # 建议开启对数坐标，因为你的 Loss 后来爆发了
+            
+        else:
+            ax.plot(values)
+            ax.set_ylabel(name.capitalize())
+
+        ax.set_title(f"{title} - {name}")
         ax.grid(True, alpha=0.3)
-    
-    fig.suptitle(title, fontsize=16, fontweight='bold', y=1.0)
+
+    plt.xlabel("Episodes")
     plt.tight_layout()
     
     if save_path:
-        os.makedirs(os.path.dirname(save_path), exist_ok=True)
-        plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        print(f"✓ Saved plot to {save_path}")
-    
+        plt.savefig(save_path)
     if show:
         plt.show()
-    
-    return fig
 
 
 def plot_exploitability_convergence(
